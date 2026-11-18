@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Squished: menu bar monitor for your Mac and Linux servers</title>
-<meta name="description" content="Squished is a free, open-source macOS menu bar app that shows CPU, memory and disk for your Mac and the Linux servers you SSH into. Nothing to install on the servers.">
+<title>Squished: a compact menu bar monitor for Mac and Linux servers</title>
+<meta name="description" content="Running out of menu bar space? Squished is a free, open-source macOS monitor that shows CPU, memory and disk for your Mac and Linux servers in the width of three icons.">
 <link rel="canonical" href="https://squished.andrewkim.me/">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
@@ -13,8 +13,8 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Squished">
-<meta property="og:title" content="Squished: your Mac and your Linux servers in one menu bar item">
-<meta property="og:description" content="A tiny macOS menu bar system monitor for your Mac and the Linux machines you SSH into. Free and open source.">
+<meta property="og:title" content="Squished: three machines in the space of three menu bar icons">
+<meta property="og:description" content="Your menu bar is running out of room. Squished is a tiny macOS system monitor for your Mac and the Linux machines you SSH into. Free and open source.">
 <meta property="og:url" content="https://squished.andrewkim.me/">
 <meta property="og:image" content="https://squished.andrewkim.me/img/og.png">
 <meta property="og:image:width" content="1200">
@@ -42,13 +42,23 @@
       "operatingSystem": "macOS 14 or later",
       "softwareVersion": "2.0.0",
       "isAccessibleForFree": true,
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
       "license": "https://opensource.org/license/mit",
       "image": "https://squished.andrewkim.me/img/og.png",
       "screenshot": "https://squished.andrewkim.me/img/hero-light.webp",
       "downloadUrl": "https://github.com/andrewk17/squished",
-      "sameAs": ["https://github.com/andrewk17/squished"],
-      "author": { "@type": "Person", "name": "Andrew Kim", "url": "https://andrewkim.me" }
+      "sameAs": [
+        "https://github.com/andrewk17/squished"
+      ],
+      "author": {
+        "@type": "Person",
+        "name": "Andrew Kim",
+        "url": "https://andrewkim.me"
+      }
     },
     {
       "@type": "FAQPage",
@@ -57,42 +67,74 @@
         {
           "@type": "Question",
           "name": "What is Squished?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Squished is a free, open-source menu bar app for macOS. It shows CPU, memory and disk for your Mac and the Linux machines you SSH into, side by side in one compact menu bar item. Click it for top processes, history, network rates and disk partitions." }
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Squished is a free, open-source menu bar app for macOS. It shows CPU, memory and disk for your Mac and the Linux machines you SSH into, side by side in one compact menu bar item. Click it for top processes, history, network rates and disk partitions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What can I do when my Mac's menu bar is full?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "macOS hides menu bar items that don't fit, and a MacBook's notch leaves less room to begin with. You can remove items you don't need by holding Command and dragging them off the bar, use a menu bar manager such as Ice to tuck some away, or switch to apps that take less room. Squished is the last kind: a system monitor about 40 points wide for one Mac."
+          }
         },
         {
           "@type": "Question",
           "name": "Does Squished install anything on my servers?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. Squished uses your existing SSH setup and sends a small shell and awk script over the connection each time it connects. There is no agent, no daemon and no extra open port on the server." }
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Squished uses your existing SSH setup and sends a small shell and awk script over the connection each time it connects. There is no agent, no daemon and no extra open port on the server."
+          }
         },
         {
           "@type": "Question",
           "name": "What do the remote machines need?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Linux with /proc, sh, awk and standard utilities such as df, and an SSH key login that doesn't prompt for a password. The sampler is tested on Ubuntu with gawk, mawk and BusyBox awk, including data from a Synology NAS. Remote Macs are not supported yet." }
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Linux with /proc, sh, awk and standard utilities such as df, and an SSH key login that doesn't prompt for a password. The sampler is tested on Ubuntu with gawk, mawk and BusyBox awk, including data from a Synology NAS. Remote Macs are not supported yet."
+          }
         },
         {
           "@type": "Question",
           "name": "How much menu bar space does Squished use?",
-          "acceptedAnswer": { "@type": "Answer", "text": "About 40 points for one Mac and 83 points for three machines, network rates included. That was measured on macOS 27.2 in November 2026. For comparison, MenuMeters used 41 points, Stats 65 and Vorssaint 111 to show one Mac in their most compact setups." }
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "About 40 points for one Mac and 83 points for three machines, network rates included. That was measured on macOS 27.2 in November 2026. For comparison, MenuMeters used 41 points, Stats 65 and Vorssaint 111 to show one Mac in their most compact setups."
+          }
         },
         {
           "@type": "Question",
           "name": "How is Squished different from Stats or iStat Menus?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Stats and iStat Menus go deep on the Mac they run on, with detailed graphs and sensors. Squished goes wide: a few numbers for several machines at once, in less menu bar space. If you only care about one Mac and want every detail, Stats does more." }
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Stats and iStat Menus go deep on the Mac they run on, with detailed graphs and sensors. Squished goes wide: a few numbers for several machines at once, in less menu bar space. If you only care about one Mac and want every detail, Stats does more."
+          }
         },
         {
           "@type": "Question",
           "name": "Is Squished free?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Squished is open source under the MIT license, and the source is on GitHub." }
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Squished is open source under the MIT license, and the source is on GitHub."
+          }
         },
         {
           "@type": "Question",
           "name": "Does Squished send my data anywhere?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. The app has no analytics and makes no network requests of its own. The only connections are the SSH sessions to the machines you add." }
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The app has no analytics and makes no network requests of its own. The only connections are the SSH sessions to the machines you add."
+          }
         },
         {
           "@type": "Question",
           "name": "Which versions of macOS does Squished run on?",
-          "acceptedAnswer": { "@type": "Answer", "text": "macOS 14 or later. For now you build it from source, which needs Xcode 16 or another Swift 6 toolchain." }
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "macOS 14 or later. For now you build it from source, which needs Xcode 16 or another Swift 6 toolchain."
+          }
         }
       ]
     }
@@ -125,11 +167,11 @@
   a { color: var(--accent); text-underline-offset: 2px; }
   header nav a { text-decoration: none; font-size: 15px; }
   h1 {
-    font-size: clamp(1.7rem, 8.4vw, 3rem); line-height: 1.08; letter-spacing: -.025em;
-    margin: 44px 0 18px; text-wrap: balance;
+    font-size: clamp(1.9rem, 9vw, 3.2rem); line-height: 1.06; letter-spacing: -.028em;
+    margin: 44px 0 14px; text-wrap: balance;
   }
-  .lede { font-size: 1.18rem; line-height: 1.5; color: var(--muted); margin: 0 0 26px; }
-  .lede strong { color: var(--text); font-weight: 600; }
+  .sub { font-size: clamp(1.25rem, 4.6vw, 1.6rem); line-height: 1.25; letter-spacing: -.012em; font-weight: 600; margin: 0 0 16px; text-wrap: balance; }
+  .lede { font-size: 1.1rem; line-height: 1.5; color: var(--muted); margin: 0 0 26px; }
   .cta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-bottom: 40px; }
   .button {
     display: inline-block; background: var(--text); color: var(--bg); text-decoration: none;
@@ -175,8 +217,9 @@
 </header>
 
 <main>
-  <h1>Your Mac and your Linux servers, squished into one menu bar item</h1>
-  <p class="lede"><strong>Squished is a free, open-source system monitor for macOS.</strong> It shows CPU, memory and disk for your Mac and the Linux machines you already SSH into (a home server, a NAS, a VPS), side by side in about the width of three menu bar icons. Nothing gets installed on the servers.</p>
+  <h1>Your menu bar is running out of room</h1>
+  <p class="sub">Squished fits three machines in the space of three icons.</p>
+  <p class="lede">Squished is a free, open-source system monitor for macOS. It shows CPU, memory and disk for your Mac and the Linux machines you already SSH into (a home server, a NAS, a VPS). Nothing gets installed on the servers.</p>
   <div class="cta">
     <a class="button" href="https://github.com/andrewk17/squished">Get it on GitHub</a>
     <small>Free, MIT license. macOS 14 or later.</small>
@@ -189,25 +232,8 @@
     </picture>
   </figure>
 
-  <h2>Why it exists</h2>
-  <p>Menu bar space is precious. Every app wants a spot, a MacBook's notch takes the middle, and whatever doesn't fit drops out of sight. Squished was built to watch several machines without spending that space.</p>
-  <ul>
-    <li><strong>Three bars per machine.</strong> CPU, memory, disk. A free-space number appears under a disk only when it's getting full.</li>
-    <li><strong>Nothing to install on your servers.</strong> Squished uses your existing SSH setup. No agent, no daemon, no extra open ports.</li>
-    <li><strong>Quiet until it matters.</strong> Bars change colour only for real trouble: memory pressure, a nearly full disk, CPU pinned for a while.</li>
-    <li><strong>Click for the detail.</strong> Top processes by CPU and memory, five minutes of history, network rates, disk partitions, uptime, and btop on any machine in one click.</li>
-  </ul>
-
-  <h2>Reading the menu bar</h2>
-  <figure>
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="/img/menubar-dark.webp" type="image/webp">
-      <img src="/img/menubar-light.webp" width="315" height="138" loading="lazy" alt="Close-up of the Squished menu bar item: the labels MAC, LAB and VPS, each over three or four small bars, then upload and download rates">
-    </picture>
-  </figure>
-  <p style="margin-top:18px">Each machine gets a short label and three bars: CPU, memory and disk, with a second disk bar when a machine has two disks. The number under the Mac's disk is free space in GiB, shown because less than 30% is left. On the right are this Mac's upload and download rates. You choose which machines appear in the menu bar; the rest stay in the panel.</p>
-
   <h2>How much menu bar space it takes</h2>
+  <p>Every app wants a spot in the menu bar, a MacBook's notch takes the middle, and whatever doesn't fit drops out of sight. A system monitor is often one of the widest things up there. Squished was built to take as little of that room as it can: about 40 points for one Mac and 83 for three machines.</p>
   <figure>
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="/img/widths-dark.webp" type="image/webp">
@@ -225,6 +251,23 @@
     </tbody>
   </table>
   <p class="note">Each app was set to show CPU, memory, disk and network in its most compact built-in style, then measured on macOS 27.2 in November 2026, from the left edge of its first menu bar item to the right edge of its last. Monitors that can watch several machines usually put a single status icon in the menu bar and keep the numbers in a dropdown.</p>
+
+  <h2>What you get</h2>
+  <ul>
+    <li><strong>Three bars per machine.</strong> CPU, memory, disk. A free-space number appears under a disk only when it's getting full.</li>
+    <li><strong>Nothing to install on your servers.</strong> Squished uses your existing SSH setup. No agent, no daemon, no extra open ports.</li>
+    <li><strong>Quiet until it matters.</strong> Bars change colour only for real trouble: memory pressure, a nearly full disk, CPU pinned for a while.</li>
+    <li><strong>Click for the detail.</strong> Top processes by CPU and memory, five minutes of history, network rates, disk partitions, uptime, and btop on any machine in one click.</li>
+  </ul>
+
+  <h2>Reading the menu bar</h2>
+  <figure>
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="/img/menubar-dark.webp" type="image/webp">
+      <img src="/img/menubar-light.webp" width="315" height="138" loading="lazy" alt="Close-up of the Squished menu bar item: the labels MAC, LAB and VPS, each over three or four small bars, then upload and download rates">
+    </picture>
+  </figure>
+  <p style="margin-top:18px">Each machine gets a short label and three bars: CPU, memory and disk, with a second disk bar when a machine has two disks. The number under the Mac's disk is free space in GiB, shown because less than 30% is left. On the right are this Mac's upload and download rates. You choose which machines appear in the menu bar; the rest stay in the panel.</p>
 
   <h2>Monitor Linux servers over SSH, with nothing to install</h2>
   <ul>
@@ -249,6 +292,9 @@ open /Applications/Squished.app</code></pre>
 
   <h3>What is Squished?</h3>
   <p>Squished is a free, open-source menu bar app for macOS. It shows CPU, memory and disk for your Mac and the Linux machines you SSH into, side by side in one compact menu bar item. Click it for top processes, history, network rates and disk partitions.</p>
+
+  <h3>What can I do when my Mac's menu bar is full?</h3>
+  <p>macOS hides menu bar items that don't fit, and a MacBook's notch leaves less room to begin with. You can remove items you don't need by holding Command and dragging them off the bar, use a menu bar manager such as Ice to tuck some away, or switch to apps that take less room. Squished is the last kind: a system monitor about 40 points wide for one Mac.</p>
 
   <h3>Does Squished install anything on my servers?</h3>
   <p>No. Squished uses your existing SSH setup and sends a small shell and awk script over the connection each time it connects. There is no agent, no daemon and no extra open port on the server.</p>

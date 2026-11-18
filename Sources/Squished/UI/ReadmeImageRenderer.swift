@@ -53,7 +53,7 @@ extension PanelVariantRenderer {
                 // the menu bar item stays sharp.
                 let card = VStack(alignment: .leading, spacing: 0) {
                     Text("Squished").font(.system(size: 15.5, weight: .bold))
-                    Text("Your Mac and your Linux servers,\nsquished into one menu bar item.")
+                    Text("Three machines in the space\nof three menu bar icons.")
                         .font(.system(size: 7.6, weight: .medium))
                         .foregroundStyle(.secondary)
                         .lineSpacing(1)

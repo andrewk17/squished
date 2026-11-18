@@ -2,7 +2,7 @@
 
 > A tiny macOS menu bar system monitor for your Mac and the Linux machines you SSH into.
 
-Squished shows CPU, memory and disk for a Mac and for Linux hosts reached over SSH, side by side in one compact menu bar item. Clicking it opens a panel with top processes, five minutes of history, network rates, disk partitions and uptime.
+Menu bar space is scarce, and a system monitor is often one of the widest things in it. Squished is built to use as little as it can: it shows CPU, memory and disk for a Mac and for Linux hosts reached over SSH, side by side in one compact menu bar item. Clicking it opens a panel with top processes, five minutes of history, network rates, disk partitions and uptime.
 
 ## Facts
 
