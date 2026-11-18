@@ -33,20 +33,25 @@ icons.
 Each machine gets a short label and three bars: CPU, memory and disk (up to
 two disk bars). The number under the Mac's disk is free space in GiB, shown
 because less than 30% is left. On the right are this Mac's upload and download
-rates, which you can hide in **Settings → General**.
+rates, which you can hide in **Settings → General**. When this Mac is the only
+machine in the menu bar, its label is dropped and the bars use the full height.
 
 ## How much room it takes
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/widths-dark.png">
-  <img alt="Menu bar widths drawn to scale: Squished uses 83 points for three machines and 44 for one Mac; MenuMeters uses 41, Stats 65 and Vorssaint 146 for one Mac" src="docs/images/widths-light.png" width="560">
+  <img alt="Menu bar widths drawn to scale. Showing one Mac: Squished 40 points, MenuMeters 41, Stats 65, Vorssaint 146. Showing three machines: Squished 83 points" src="docs/images/widths-light.png" width="560">
 </picture>
 
-Squished fits three machines into about the space other monitors use for one
-Mac. Each app was set to show CPU, memory, disk and network in its most compact
-built-in style, and its menu bar items were measured on macOS 27.2 in November
-2026, including the gaps between them. Versions: MenuMeters 2.1.7, Stats 3.1.0
-and Vorssaint 3.4.4.
+For one Mac, Squished takes as little room as the most compact monitor measured
+here, with disk included. With two more machines added it is still narrower
+than some monitors are for one. MenuMeters, Stats and Vorssaint show only the
+Mac they run on.
+
+Each app was set to show CPU, memory, disk and network in its most compact
+built-in style (MenuMeters has no disk level), and its menu bar items were
+measured on macOS 27.2 in November 2026, including the gaps between them.
+Versions: MenuMeters 2.1.7, Stats 3.1.0 and Vorssaint 3.4.4.
 
 ## Install
 
@@ -67,6 +72,9 @@ Open **Settings → Hosts** and add an alias from your `~/.ssh/config`. Squished
 runs the system `ssh` in batch mode, so connect once to trust the host key
 and make sure it accepts a key login without a prompt (a key loaded in your
 SSH agent works).
+
+Each machine has a **Show in menu bar** switch. Turn it off to keep a machine
+in the panel without giving it room in the menu bar.
 
 Remote machines need Linux with `/proc`, `sh`, `awk` and standard utilities
 such as `df`. The sampler is tested on Ubuntu with gawk, mawk and BusyBox awk,

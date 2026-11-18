@@ -111,26 +111,25 @@ private struct MenuBarWidthComparison: View {
 
     private struct MeasuredApp {
         let name: String
-        let caption: String
+        var note: String?
         let span: CGFloat
         let items: [(offset: CGFloat, width: CGFloat)]
     }
 
-    // Accessibility frames can overlap. Offsets are relative to the leftmost frame.
+    // Each app showing one Mac. Accessibility frames can overlap; offsets are
+    // relative to the leftmost frame.
     private static let measuredApps: [MeasuredApp] = [
-        .init(name: "MenuMeters", caption: "This Mac · no disk level", span: 41, items: [(0, 19), (17, 13), (28, 13)]),
-        .init(name: "Stats", caption: "This Mac", span: 65, items: [(0, 12.5), (11, 12.5), (22, 12.5), (33, 32)]),
-        .init(name: "Vorssaint", caption: "This Mac", span: 146, items: [(0, 146)])
+        .init(name: "MenuMeters", note: "No disk level", span: 41, items: [(0, 19), (17, 13), (28, 13)]),
+        .init(name: "Stats", span: 65, items: [(0, 12.5), (11, 12.5), (22, 12.5), (33, 32)]),
+        .init(name: "Vorssaint", span: 146, items: [(0, 146)])
     ]
 
     var body: some View {
         VStack(spacing: 0) {
-            squishedRow("Squished", caption: "3 machines", item: fleetItem)
-            squishedRow("Squished", caption: "This Mac", item: localItem)
-                .overlay(alignment: .top) { separator }
-
+            section("ONE MAC")
+            squishedRow(item: localItem)
             ForEach(Self.measuredApps.sorted { $0.span < $1.span }, id: \.name) { app in
-                row(app.name, caption: app.caption, span: app.span, valueColor: .primary) {
+                row(app.name, note: app.note, span: app.span, valueColor: .primary) {
                     ZStack(alignment: .leading) {
                         ForEach(app.items.indices, id: \.self) { index in
                             let item = app.items[index]
@@ -146,6 +145,9 @@ private struct MenuBarWidthComparison: View {
                 }
                 .overlay(alignment: .top) { separator }
             }
+
+            section("THREE MACHINES", note: "The other apps show one Mac only").padding(.top, 8)
+            squishedRow(item: fleetItem)
         }
         .overlay {
             Canvas { context, size in
@@ -167,10 +169,22 @@ private struct MenuBarWidthComparison: View {
         Rectangle().fill(.primary.opacity(0.10)).frame(height: 0.5)
     }
 
-    private func squishedRow(_ name: String, caption: String, item: NSImage) -> some View {
+    private func section(_ title: String, note: String? = nil) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: 8) {
+            Text(title).font(.system(size: 10, weight: .semibold)).kerning(0.8).foregroundStyle(.secondary)
+            if let note {
+                Text(note).font(.system(size: 10)).foregroundStyle(.tertiary)
+            }
+            Spacer(minLength: 0)
+        }
+        .frame(height: 26)
+        .overlay(alignment: .bottom) { separator }
+    }
+
+    private func squishedRow(item: NSImage) -> some View {
         let span = item.size.width + Self.statusItemPadding
         let shape = RoundedRectangle(cornerRadius: 4)
-        return row(name, caption: caption, span: span, valueColor: .blue) {
+        return row("Squished", note: nil, span: span, valueColor: .blue) {
             Image(nsImage: item)
                 .resizable()
                 .frame(width: item.size.width * Self.widthScale, height: item.size.height * Self.widthScale)
@@ -180,12 +194,14 @@ private struct MenuBarWidthComparison: View {
         }
     }
 
-    private func row(_ name: String, caption: String, span: CGFloat, valueColor: Color,
+    private func row(_ name: String, note: String?, span: CGFloat, valueColor: Color,
                      @ViewBuilder content: () -> some View) -> some View {
         HStack(spacing: Self.columnSpacing) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(name).font(.system(size: 13, weight: .semibold)).foregroundStyle(.primary)
-                Text(caption).font(.system(size: 11)).foregroundStyle(.secondary)
+                if let note {
+                    Text(note).font(.system(size: 11)).foregroundStyle(.secondary)
+                }
             }
             .frame(width: Self.labelWidth, alignment: .leading)
 

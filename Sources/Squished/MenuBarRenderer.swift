@@ -65,6 +65,9 @@ final class MenuBarRenderer {
             host.config.showFreeSpaceInMenuBar
                 && (host.snapshot?.disks.prefix(2).contains { host.showsFreeSpace(for: $0) } ?? false)
         }
+        // This Mac on its own has nothing to be told apart from: it drops its label, the bars
+        // use that row, and the network rates (always this Mac's) sit closer.
+        let solo = visibleHosts.count == 1 && visibleHosts[0].config.kind == .local
         let entries = visibleHosts.map { host -> Entry in
             let state: Int
             switch host.state {
@@ -82,9 +85,9 @@ final class MenuBarRenderer {
                     : FleetFormat.compactFreeSpace(disk.total > disk.used ? disk.total - disk.used : 0))
             } : []
             // Reserve the number row for the whole host if any partition shows one.
-            let barY: CGFloat = stacked && !free.isEmpty ? 7.5 : 2
-            let barHeight: CGFloat = (stacked ? 15 : 13) - barY
-            return Entry(label: String(host.config.menuBarLabel.uppercased().prefix(4)),
+            let barY: CGFloat = stacked && !free.isEmpty ? 7.5 : solo ? 3 : 2
+            let barHeight: CGFloat = (solo ? 19 : stacked ? 15 : 13) - barY
+            return Entry(label: solo ? "" : String(host.config.menuBarLabel.uppercased().prefix(4)),
                          steps: values.map {
                              let value = max(0, min(100, $0 ?? 0))
                              return state >= 2 || value == 0 ? 0 : max(2, Int((value * Double(barHeight) * 2 / 100).rounded()))
@@ -128,8 +131,9 @@ final class MenuBarRenderer {
                                numbersInset: (width - numberWidth) / 2)
         }
         let networkWidth = 6.5 + Self.measure("999K", rateFont)
+        let networkGap: CGFloat = solo ? 2 : 4
         let machineWidth = layouts.reduce(0) { $0 + $1.width } + CGFloat(max(0, entries.count - 1)) * 4
-        let width = machineWidth + (network.isEmpty ? 0 : (entries.isEmpty ? 0 : 4) + networkWidth)
+        let width = machineWidth + (network.isEmpty ? 0 : (entries.isEmpty ? 0 : networkGap) + networkWidth)
             + (glyph.isEmpty ? 0 : (entries.isEmpty && network.isEmpty ? 0 : 3) + 11)
         let result = NSImage(size: NSSize(width: max(1, ceil(width)), height: 22), flipped: false) { _ in
             let draw = {
@@ -172,7 +176,7 @@ final class MenuBarRenderer {
                     x += width + (index < entries.count - 1 ? 4 : 0)
                 }
                 if !network.isEmpty {
-                    if !entries.isEmpty { x += 4 }
+                    if !entries.isEmpty { x += networkGap }
                     for row in 0..<2 {
                         let baseline: CGFloat = row == 0 ? 13 : 3
                         Self.arrow(up: row == 0, x: x, y: baseline,
