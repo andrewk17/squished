@@ -35,6 +35,19 @@ two disk bars). The number under the Mac's disk is free space in GiB, shown
 because less than 30% is left. On the right are this Mac's upload and download
 rates, which you can hide in **Settings → General**.
 
+## How much room it takes
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/widths-dark.png">
+  <img alt="Menu bar widths drawn to scale: Squished uses 83 points for three machines and 44 for one Mac; MenuMeters uses 41, Stats 65 and Vorssaint 146 for one Mac" src="docs/images/widths-light.png" width="560">
+</picture>
+
+Squished fits three machines into about the space other monitors use for one
+Mac. Each app was set to show CPU, memory, disk and network in its most compact
+built-in style, and its menu bar items were measured on macOS 27.2 in November
+2026, including the gaps between them. Versions: MenuMeters 2.1.7, Stats 3.1.0
+and Vorssaint 3.4.4.
+
 ## Install
 
 Squished is built from source for now. The app runs on macOS 14 or later.
@@ -131,8 +144,8 @@ swift build
 swift test    # the core library and its tests also build and run on Linux
 ```
 
-`Scripts/render-readme-images.sh` regenerates the images in this README from
-demo data.
+`Scripts/render-readme-images.sh` regenerates the hero, menu bar close-up and
+width comparison images.
 
 ## License
 

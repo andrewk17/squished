@@ -12,10 +12,11 @@ extension PanelVariantRenderer {
         for scheme: ColorScheme in [.dark, .light] {
             let dark = scheme == .dark
             let suffix = dark ? "dark" : "light"
-            let item = MenuBarRenderer().image(store: store, appearance: NSAppearance(named: dark ? .darkAqua : .aqua))
+            let appearance = NSAppearance(named: dark ? .darkAqua : .aqua)
+            let item = MenuBarRenderer().image(store: store, appearance: appearance)
             let statusItem = Image(nsImage: item).frame(width: item.size.width, height: item.size.height)
             let ink: Color = dark ? .white : .black
-            let strip = (dark ? color(18, 20, 26) : color(250, 250, 250)).opacity(0.82)
+            let strip = menuBarStrip(dark: dark)
             let panelShape = RoundedRectangle(cornerRadius: 12)
             let panel = HostedPanelView(store: store, settings: {}, maximumHeight: .greatestFiniteMagnitude)
                 .environment(\.renderingPanel, true)
@@ -39,9 +40,7 @@ extension PanelVariantRenderer {
 
                 panel.padding(.trailing, 20).padding(.bottom, 38)
             }
-            .background(LinearGradient(colors: dark ? [color(26, 34, 48), color(43, 58, 82)]
-                                                     : [color(223, 230, 239), color(245, 247, 250)],
-                                       startPoint: .topLeading, endPoint: .bottomTrailing))
+            .background(readmeBackdrop(dark: dark))
             .environment(\.colorScheme, scheme)
 
             let closeUp = statusItem.padding(12)
@@ -50,6 +49,31 @@ extension PanelVariantRenderer {
             try writeReadmeImage(hero, scale: 2, to: url.appendingPathComponent("hero-\(suffix).png"))
             try writeReadmeImage(closeUp, scale: 6, to: url.appendingPathComponent("menubar-\(suffix).png"))
         }
+
+        let localStore = FleetStore(startServices: false)
+        localStore.hosts = store.hosts.filter { $0.config.kind == .local }
+        localStore.settings.showNetworkInMenuBar = store.settings.showNetworkInMenuBar
+        for scheme: ColorScheme in [.dark, .light] {
+            let dark = scheme == .dark
+            let suffix = dark ? "dark" : "light"
+            let appearance = NSAppearance(named: dark ? .darkAqua : .aqua)
+            let item = MenuBarRenderer().image(store: store, appearance: appearance)
+            let localItem = MenuBarRenderer().image(store: localStore, appearance: appearance)
+            let widths = MenuBarWidthComparison(fleetItem: item, localItem: localItem, strip: menuBarStrip(dark: dark))
+                .background(readmeBackdrop(dark: dark))
+                .environment(\.colorScheme, scheme)
+            try writeReadmeImage(widths, scale: 2, to: url.appendingPathComponent("widths-\(suffix).png"))
+        }
+    }
+
+    private static func menuBarStrip(dark: Bool) -> Color {
+        (dark ? color(18, 20, 26) : color(250, 250, 250)).opacity(0.82)
+    }
+
+    private static func readmeBackdrop(dark: Bool) -> LinearGradient {
+        LinearGradient(colors: dark ? [color(26, 34, 48), color(43, 58, 82)]
+                                   : [color(223, 230, 239), color(245, 247, 250)],
+                       startPoint: .topLeading, endPoint: .bottomTrailing)
     }
 
     private static func color(_ red: Double, _ green: Double, _ blue: Double) -> Color {
@@ -68,6 +92,111 @@ extension PanelVariantRenderer {
         }
         try writePNG(image, to: url)
         print("\(url.lastPathComponent): \(image.width) × \(image.height) px at \(Int(scale))×")
+    }
+}
+
+private struct MenuBarWidthComparison: View {
+    let fleetItem: NSImage
+    let localItem: NSImage
+    let strip: Color
+
+    private static let widthScale: CGFloat = 1.5
+    // Status item button padding measured on macOS 27.
+    private static let statusItemPadding: CGFloat = 2
+    private static let labelWidth: CGFloat = 140
+    // A 22 pt menu bar item at the same scale, plus room for the outline.
+    private static let stripHeight: CGFloat = 22 * widthScale + 4
+    private static let valueWidth: CGFloat = 58
+    private static let columnSpacing: CGFloat = 14
+
+    private struct MeasuredApp {
+        let name: String
+        let caption: String
+        let span: CGFloat
+        let items: [(offset: CGFloat, width: CGFloat)]
+    }
+
+    // Accessibility frames can overlap. Offsets are relative to the leftmost frame.
+    private static let measuredApps: [MeasuredApp] = [
+        .init(name: "MenuMeters", caption: "This Mac · no disk level", span: 41, items: [(0, 19), (17, 13), (28, 13)]),
+        .init(name: "Stats", caption: "This Mac", span: 65, items: [(0, 12.5), (11, 12.5), (22, 12.5), (33, 32)]),
+        .init(name: "Vorssaint", caption: "This Mac", span: 146, items: [(0, 146)])
+    ]
+
+    var body: some View {
+        VStack(spacing: 0) {
+            squishedRow("Squished", caption: "3 machines", item: fleetItem)
+            squishedRow("Squished", caption: "This Mac", item: localItem)
+                .overlay(alignment: .top) { separator }
+
+            ForEach(Self.measuredApps.sorted { $0.span < $1.span }, id: \.name) { app in
+                row(app.name, caption: app.caption, span: app.span, valueColor: .primary) {
+                    ZStack(alignment: .leading) {
+                        ForEach(app.items.indices, id: \.self) { index in
+                            let item = app.items[index]
+                            // Inset each item slightly so neighbours read as separate items
+                            // even where their measured frames overlap.
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(.tertiary)
+                                .frame(width: item.width * Self.widthScale - 2, height: Self.stripHeight)
+                                .offset(x: item.offset * Self.widthScale + 1)
+                        }
+                    }
+                    .frame(width: app.span * Self.widthScale, alignment: .leading)
+                }
+                .overlay(alignment: .top) { separator }
+            }
+        }
+        .overlay {
+            Canvas { context, size in
+                let rightEdge = size.width - Self.valueWidth - Self.columnSpacing
+                let guide = Path { path in
+                    path.move(to: CGPoint(x: rightEdge, y: 0))
+                    path.addLine(to: CGPoint(x: rightEdge, y: size.height))
+                }
+                context.stroke(guide, with: .color(.primary.opacity(0.18)),
+                               style: StrokeStyle(lineWidth: 0.5, dash: [2, 3]))
+            }
+        }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 10)
+        .frame(width: 560)
+    }
+
+    private var separator: some View {
+        Rectangle().fill(.primary.opacity(0.10)).frame(height: 0.5)
+    }
+
+    private func squishedRow(_ name: String, caption: String, item: NSImage) -> some View {
+        let span = item.size.width + Self.statusItemPadding
+        let shape = RoundedRectangle(cornerRadius: 4)
+        return row(name, caption: caption, span: span, valueColor: .blue) {
+            Image(nsImage: item)
+                .resizable()
+                .frame(width: item.size.width * Self.widthScale, height: item.size.height * Self.widthScale)
+                .frame(width: span * Self.widthScale, height: Self.stripHeight)
+                .background(strip, in: shape)
+                .overlay { shape.strokeBorder(.blue, lineWidth: 1) }
+        }
+    }
+
+    private func row(_ name: String, caption: String, span: CGFloat, valueColor: Color,
+                     @ViewBuilder content: () -> some View) -> some View {
+        HStack(spacing: Self.columnSpacing) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(name).font(.system(size: 13, weight: .semibold)).foregroundStyle(.primary)
+                Text(caption).font(.system(size: 11)).foregroundStyle(.secondary)
+            }
+            .frame(width: Self.labelWidth, alignment: .leading)
+
+            content().frame(maxWidth: .infinity, alignment: .trailing)
+
+            Text("\(FleetFormat.decimal(Double(span), digits: span.rounded() == span ? 0 : 1)) pt")
+                .font(.system(size: 12, weight: .medium).monospacedDigit())
+                .foregroundStyle(valueColor)
+                .frame(width: Self.valueWidth, alignment: .trailing)
+        }
+        .frame(height: 44)
     }
 }
 

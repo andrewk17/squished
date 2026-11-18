@@ -33,6 +33,8 @@ final class NASSamplerIntegrationTests: XCTestCase {
         let program = RemoteSampler.program.replacingOccurrences(of: "/proc", with: root.path)
             .replacingOccurrences(of: "/sys/class/net", with: root.appendingPathComponent("sys/class/net").path)
             .replacingOccurrences(of: "os = command(\"uname -s\")", with: "os = \"Linux\"")
+            // The fixture's RSS is in Linux 4 KiB pages; don't use the test machine's page size.
+            .replacingOccurrences(of: "command(\"getconf PAGESIZE\")", with: "\"4096\"")
         var checked = 0
         for variant in ["awk", "mawk", "gawk", "busybox awk"] {
             let lookup = Process()
