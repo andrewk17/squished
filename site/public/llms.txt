@@ -1,0 +1,19 @@
+# Squished
+
+> A tiny macOS menu bar system monitor for your Mac and the Linux machines you SSH into.
+
+Squished shows CPU, memory and disk for a Mac and for Linux hosts reached over SSH, side by side in one compact menu bar item. Clicking it opens a panel with top processes, five minutes of history, network rates, disk partitions and uptime.
+
+## Facts
+
+- Free and open source under the MIT license.
+- Runs on macOS 14 or later. Built from source for now (Xcode 16 or another Swift 6 toolchain).
+- Remote machines need Linux with /proc, sh, awk and standard utilities such as df, plus an SSH key login without a password prompt. Remote Macs are not supported yet.
+- Nothing is installed on remote machines. Squished sends a small shell and awk script over SSH each time it connects. No agent, no daemon, no extra open ports.
+- Menu bar width: about 40 points for one Mac and 83 points for three machines, network rates included (measured on macOS 27.2, November 2026). In the same test MenuMeters 2.1.7 used 41 points, Stats 3.1.0 used 65 and Vorssaint 3.4.4 used 111 to show one Mac.
+- No analytics. The app makes no network requests of its own apart from the SSH sessions to the machines you add.
+
+## Links
+
+- [Website](https://squished.andrewkim.me/)
+- [Source code and README](https://github.com/andrewk17/squished)

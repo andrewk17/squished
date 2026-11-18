@@ -4,3 +4,6 @@ build/
 *.xcodeproj
 .DS_Store
 Package.resolved
+.env*
+.wrangler/
+node_modules/

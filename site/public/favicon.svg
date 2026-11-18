@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .track { fill: #1d1d1f; opacity: .22 }
+    .fill { fill: #1d1d1f }
+    @media (prefers-color-scheme: dark) { .track, .fill { fill: #f5f5f7 } }
+  </style>
+  <rect class="track" x="4" y="4" width="6.5" height="24" rx="2"/>
+  <rect class="track" x="12.75" y="4" width="6.5" height="24" rx="2"/>
+  <rect class="track" x="21.5" y="4" width="6.5" height="24" rx="2"/>
+  <path class="fill" d="M4 20h6.5v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/>
+  <path class="fill" d="M12.75 13h6.5v13a2 2 0 0 1-2 2h-2.5a2 2 0 0 1-2-2z"/>
+  <path class="fill" d="M21.5 8.500h6.5V26a2 2 0 0 1-2 2h-2.5a2 2 0 0 1-2-2z"/>
+</svg>

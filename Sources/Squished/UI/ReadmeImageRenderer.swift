@@ -48,6 +48,27 @@ extension PanelVariantRenderer {
                 .environment(\.colorScheme, scheme)
             try writeReadmeImage(hero, scale: 2, to: url.appendingPathComponent("hero-\(suffix).png"))
             try writeReadmeImage(closeUp, scale: 6, to: url.appendingPathComponent("menubar-\(suffix).png"))
+            if dark {
+                // Link preview card, 1200 × 630 px: laid out small and rendered at 6× so
+                // the menu bar item stays sharp.
+                let card = VStack(alignment: .leading, spacing: 0) {
+                    Text("Squished").font(.system(size: 15.5, weight: .bold))
+                    Text("Your Mac and your Linux servers,\nsquished into one menu bar item.")
+                        .font(.system(size: 7.6, weight: .medium))
+                        .foregroundStyle(.secondary)
+                        .lineSpacing(1)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.top, 4)
+                    Spacer(minLength: 0)
+                    statusItem.padding(.horizontal, 8).padding(.vertical, 5)
+                        .background(strip, in: RoundedRectangle(cornerRadius: 6))
+                }
+                .padding(14)
+                .frame(width: 200, height: 105, alignment: .topLeading)
+                .background(readmeBackdrop(dark: true))
+                .environment(\.colorScheme, .dark)
+                try writeReadmeImage(card, scale: 6, to: url.appendingPathComponent("social-card.png"))
+            }
         }
 
         // The width comparison places Squished beside captures of other apps' menu bar
