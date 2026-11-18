@@ -50,20 +50,46 @@ extension PanelVariantRenderer {
             try writeReadmeImage(closeUp, scale: 6, to: url.appendingPathComponent("menubar-\(suffix).png"))
         }
 
+        // The width comparison places Squished beside captures of other apps' menu bar
+        // items, which were taken on a dark menu bar, so it always draws the dark item.
         let localStore = FleetStore(startServices: false)
         localStore.hosts = store.hosts.filter { $0.config.kind == .local }
         localStore.settings.showNetworkInMenuBar = store.settings.showNetworkInMenuBar
+        let captures = url.appendingPathComponent("captures")
+        func capture(_ name: String) throws -> NSImage {
+            let file = captures.appendingPathComponent(name + ".png")
+            guard let image = NSImage(contentsOf: file) else { throw CocoaError(.fileReadNoSuchFile, userInfo: [NSURLErrorKey: file]) }
+            return image
+        }
+        let darkAqua = NSAppearance(named: .darkAqua)
+        let comparison = MenuBarWidthComparison(
+            fleetItem: raster(MenuBarRenderer().image(store: store, appearance: darkAqua)),
+            localItem: raster(MenuBarRenderer().image(store: localStore, appearance: darkAqua)),
+            backdrop: try capture("backdrop"),
+            apps: try MenuBarWidthComparison.measuredApps.map { ($0, try capture($0.capture)) })
         for scheme: ColorScheme in [.dark, .light] {
             let dark = scheme == .dark
-            let suffix = dark ? "dark" : "light"
-            let appearance = NSAppearance(named: dark ? .darkAqua : .aqua)
-            let item = MenuBarRenderer().image(store: store, appearance: appearance)
-            let localItem = MenuBarRenderer().image(store: localStore, appearance: appearance)
-            let widths = MenuBarWidthComparison(fleetItem: item, localItem: localItem, strip: menuBarStrip(dark: dark))
-                .background(readmeBackdrop(dark: dark))
-                .environment(\.colorScheme, scheme)
-            try writeReadmeImage(widths, scale: 2, to: url.appendingPathComponent("widths-\(suffix).png"))
+            let widths = comparison.background(readmeBackdrop(dark: dark)).environment(\.colorScheme, scheme)
+            try writeReadmeImage(widths, scale: 2, to: url.appendingPathComponent("widths-\(dark ? "dark" : "light").png"))
         }
+    }
+
+    /// The captures are 2 px per point. Drawing Squished's item at the same density gives
+    /// every row of the comparison the same sharpness.
+    private static func raster(_ image: NSImage) -> NSImage {
+        let scale: CGFloat = 2
+        guard let rep = NSBitmapImageRep(
+            bitmapDataPlanes: nil, pixelsWide: Int(image.size.width * scale), pixelsHigh: Int(image.size.height * scale),
+            bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false,
+            colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0) else { return image }
+        rep.size = image.size
+        NSGraphicsContext.saveGraphicsState()
+        NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: rep)
+        image.draw(in: NSRect(origin: .zero, size: image.size))
+        NSGraphicsContext.restoreGraphicsState()
+        let result = NSImage(size: image.size)
+        result.addRepresentation(rep)
+        return result
     }
 
     private static func menuBarStrip(dark: Bool) -> Color {
@@ -98,55 +124,53 @@ extension PanelVariantRenderer {
 private struct MenuBarWidthComparison: View {
     let fleetItem: NSImage
     let localItem: NSImage
-    let strip: Color
+    let backdrop: NSImage
+    let apps: [(app: MeasuredApp, capture: NSImage)]
 
-    private static let widthScale: CGFloat = 1.5
+    // Twice actual size. With 2 px captures and a 2× export, every captured pixel stays whole.
+    private static let widthScale: CGFloat = 2
     // Status item button padding measured on macOS 27.
     private static let statusItemPadding: CGFloat = 2
     private static let labelWidth: CGFloat = 140
-    // A 22 pt menu bar item at the same scale, plus room for the outline.
-    private static let stripHeight: CGFloat = 22 * widthScale + 4
+    // The captures keep the middle 24 pt of the menu bar's height.
+    private static let stripHeight: CGFloat = 24 * widthScale
     private static let valueWidth: CGFloat = 58
     private static let columnSpacing: CGFloat = 14
+    private static let stripShape = RoundedRectangle(cornerRadius: 6)
 
-    private struct MeasuredApp {
+    struct MeasuredApp {
         let name: String
         var note: String?
+        /// Left edge of the first menu bar item to the right edge of the last, in points.
         let span: CGFloat
-        let items: [(offset: CGFloat, width: CGFloat)]
+        /// A capture of exactly that span, in `docs/images/captures`.
+        let capture: String
     }
 
-    // Each app showing one Mac. Accessibility frames can overlap; offsets are
-    // relative to the leftmost frame.
-    private static let measuredApps: [MeasuredApp] = [
-        .init(name: "MenuMeters", note: "No disk level", span: 41, items: [(0, 19), (17, 13), (28, 13)]),
-        .init(name: "Stats", span: 65, items: [(0, 12.5), (11, 12.5), (22, 12.5), (33, 32)]),
-        .init(name: "Vorssaint", span: 146, items: [(0, 146)])
+    // Each app showing CPU, memory, disk and network for one Mac in its most compact
+    // built-in style, measured on macOS 27.2.
+    static let measuredApps: [MeasuredApp] = [
+        .init(name: "MenuMeters", note: "No disk level", span: 41, capture: "menumeters"),
+        .init(name: "Stats", span: 65, capture: "stats"),
+        .init(name: "Vorssaint", span: 111, capture: "vorssaint")
     ]
 
     var body: some View {
         VStack(spacing: 0) {
             section("ONE MAC")
             squishedRow(item: localItem)
-            ForEach(Self.measuredApps.sorted { $0.span < $1.span }, id: \.name) { app in
-                row(app.name, note: app.note, span: app.span, valueColor: .primary) {
-                    ZStack(alignment: .leading) {
-                        ForEach(app.items.indices, id: \.self) { index in
-                            let item = app.items[index]
-                            // Inset each item slightly so neighbours read as separate items
-                            // even where their measured frames overlap.
-                            RoundedRectangle(cornerRadius: 4)
-                                .fill(.tertiary)
-                                .frame(width: item.width * Self.widthScale - 2, height: Self.stripHeight)
-                                .offset(x: item.offset * Self.widthScale + 1)
-                        }
-                    }
-                    .frame(width: app.span * Self.widthScale, alignment: .leading)
+            ForEach(apps.sorted { $0.app.span < $1.app.span }, id: \.app.name) { entry in
+                row(entry.app.name, note: entry.app.note, span: entry.app.span, valueColor: .primary) {
+                    Image(nsImage: entry.capture)
+                        .interpolation(.none)
+                        .resizable()
+                        .frame(width: entry.app.span * Self.widthScale, height: Self.stripHeight)
+                        .clipShape(Self.stripShape)
                 }
                 .overlay(alignment: .top) { separator }
             }
 
-            section("THREE MACHINES", note: "The other apps show one Mac only").padding(.top, 8)
+            section("THREE MACHINES", note: "The others show numbers for one Mac only").padding(.top, 8)
             squishedRow(item: fleetItem)
         }
         .overlay {
@@ -183,14 +207,15 @@ private struct MenuBarWidthComparison: View {
 
     private func squishedRow(item: NSImage) -> some View {
         let span = item.size.width + Self.statusItemPadding
-        let shape = RoundedRectangle(cornerRadius: 4)
         return row("Squished", note: nil, span: span, valueColor: .blue) {
             Image(nsImage: item)
+                .interpolation(.none)
                 .resizable()
                 .frame(width: item.size.width * Self.widthScale, height: item.size.height * Self.widthScale)
                 .frame(width: span * Self.widthScale, height: Self.stripHeight)
-                .background(strip, in: shape)
-                .overlay { shape.strokeBorder(.blue, lineWidth: 1) }
+                .background { Image(nsImage: backdrop).resizable() }
+                .clipShape(Self.stripShape)
+                .overlay { Self.stripShape.strokeBorder(.blue, lineWidth: 1.5) }
         }
     }
 
@@ -212,7 +237,7 @@ private struct MenuBarWidthComparison: View {
                 .foregroundStyle(valueColor)
                 .frame(width: Self.valueWidth, alignment: .trailing)
         }
-        .frame(height: 44)
+        .frame(height: 62)
     }
 }
 

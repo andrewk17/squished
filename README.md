@@ -7,10 +7,12 @@
   <img alt="Squished in the menu bar, showing three machines, with its panel open below" src="docs/images/hero-light.png" width="520">
 </picture>
 
-Squished is a small system monitor for macOS. It shows CPU, memory and disk
-for your Mac **and** the Linux machines you already SSH into (a home server,
-a NAS, a VPS), side by side in a single menu bar item about as wide as three
-icons.
+Menu bar space is precious. Every app wants a spot, a MacBook's notch takes
+the middle, and whatever doesn't fit drops out of sight. Squished was built to
+watch several machines without spending that space. It shows CPU, memory and
+disk for your Mac **and** the Linux machines you already SSH into (a home
+server, a NAS, a VPS), side by side in one menu bar item about as wide as
+three icons.
 
 - **Three bars per machine.** CPU, memory, disk. A free-space number appears
   under a disk only when it's getting full.
@@ -40,18 +42,21 @@ machine in the menu bar, its label is dropped and the bars use the full height.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/widths-dark.png">
-  <img alt="Menu bar widths drawn to scale. Showing one Mac: Squished 40 points, MenuMeters 41, Stats 65, Vorssaint 146. Showing three machines: Squished 83 points" src="docs/images/widths-light.png" width="560">
+  <img alt="Menu bar items shown at the same scale. Showing one Mac: Squished 40 points wide, MenuMeters 41, Stats 65, Vorssaint 111. Showing three machines: Squished 83 points" src="docs/images/widths-light.png" width="560">
 </picture>
 
 For one Mac, Squished takes as little room as the most compact monitor measured
-here, with disk included. With two more machines added it is still narrower
-than some monitors are for one. MenuMeters, Stats and Vorssaint show only the
-Mac they run on.
+here, with disk included. With two more machines added, it still fits within
+the range the others use for one. Monitors that can watch several machines
+usually put a single status icon in the menu bar and keep the numbers in a
+dropdown.
 
 Each app was set to show CPU, memory, disk and network in its most compact
-built-in style (MenuMeters has no disk level), and its menu bar items were
-measured on macOS 27.2 in November 2026, including the gaps between them.
-Versions: MenuMeters 2.1.7, Stats 3.1.0 and Vorssaint 3.4.4.
+built-in style (MenuMeters has no disk level), then measured and captured on
+macOS 27.2 in November 2026. A width runs from the left edge of an app's first
+menu bar item to the right edge of its last. Versions: MenuMeters 2.1.7,
+Stats 3.1.0 and Vorssaint 3.4.4. The Squished rows are drawn from demo data at
+its measured widths.
 
 ## Install
 
@@ -153,7 +158,8 @@ swift test    # the core library and its tests also build and run on Linux
 ```
 
 `Scripts/render-readme-images.sh` regenerates the hero, menu bar close-up and
-width comparison images.
+width comparison images. The comparison uses the captures of other apps in
+`docs/images/captures`.
 
 ## License
 
