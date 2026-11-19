@@ -181,7 +181,7 @@ private struct MenuBarWidthComparison: View {
             section("ONE MAC")
             squishedRow(item: localItem)
             ForEach(apps.sorted { $0.app.span < $1.app.span }, id: \.app.name) { entry in
-                row(entry.app.name, note: entry.app.note, span: entry.app.span, valueColor: .primary) {
+                row(entry.app.name, note: entry.app.note, span: entry.app.span) {
                     Image(nsImage: entry.capture)
                         .interpolation(.none)
                         .resizable()
@@ -228,7 +228,7 @@ private struct MenuBarWidthComparison: View {
 
     private func squishedRow(item: NSImage) -> some View {
         let span = item.size.width + Self.statusItemPadding
-        return row("Squished", note: nil, span: span, valueColor: .blue) {
+        return row("Squished", note: nil, span: span, highlighted: true) {
             Image(nsImage: item)
                 .interpolation(.none)
                 .resizable()
@@ -238,13 +238,20 @@ private struct MenuBarWidthComparison: View {
                 .clipShape(Self.stripShape)
                 .overlay { Self.stripShape.strokeBorder(.blue, lineWidth: 1.5) }
         }
+        // A tinted band marks this app's rows. It reaches into the side margins.
+        .background {
+            RoundedRectangle(cornerRadius: 9).fill(.blue.opacity(0.16))
+                .padding(.horizontal, -10)
+                .padding(.vertical, 5)
+        }
     }
 
-    private func row(_ name: String, note: String?, span: CGFloat, valueColor: Color,
+    private func row(_ name: String, note: String?, span: CGFloat, highlighted: Bool = false,
                      @ViewBuilder content: () -> some View) -> some View {
         HStack(spacing: Self.columnSpacing) {
             VStack(alignment: .leading, spacing: 2) {
-                Text(name).font(.system(size: 13, weight: .semibold)).foregroundStyle(.primary)
+                Text(name).font(.system(size: 13, weight: highlighted ? .bold : .medium))
+                    .foregroundStyle(.primary.opacity(highlighted ? 1 : 0.8))
                 if let note {
                     Text(note).font(.system(size: 11)).foregroundStyle(.secondary)
                 }
@@ -254,8 +261,8 @@ private struct MenuBarWidthComparison: View {
             content().frame(maxWidth: .infinity, alignment: .trailing)
 
             Text("\(FleetFormat.decimal(Double(span), digits: span.rounded() == span ? 0 : 1)) pt")
-                .font(.system(size: 12, weight: .medium).monospacedDigit())
-                .foregroundStyle(valueColor)
+                .font(.system(size: 12, weight: highlighted ? .bold : .medium).monospacedDigit())
+                .foregroundStyle(highlighted ? AnyShapeStyle(.blue) : AnyShapeStyle(.primary.opacity(0.8)))
                 .frame(width: Self.valueWidth, alignment: .trailing)
         }
         .frame(height: 62)
