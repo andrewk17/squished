@@ -1,6 +1,6 @@
 # Squished
 
-**Your menu bar is running out of room. Squished fits three machines in the space of three icons.**
+**Super compact stats for your fleet.** Your Mac and your Linux servers, in the space of three menu bar icons.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/hero-dark.png">

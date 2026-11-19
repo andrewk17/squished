@@ -53,8 +53,8 @@ extension PanelVariantRenderer {
                 // the menu bar item stays sharp.
                 let card = VStack(alignment: .leading, spacing: 0) {
                     Text("Squished").font(.system(size: 15.5, weight: .bold))
-                    Text("Three machines in the space\nof three menu bar icons.")
-                        .font(.system(size: 7.6, weight: .medium))
+                    Text("Super compact stats for your fleet.")
+                        .font(.system(size: 8.6, weight: .medium))
                         .foregroundStyle(.secondary)
                         .lineSpacing(1)
                         .fixedSize(horizontal: false, vertical: true)
