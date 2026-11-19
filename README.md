@@ -65,9 +65,15 @@ machine in the menu bar, its label is dropped and the bars use the full height.
 
 ## Install
 
-Squished is built from source for now. The app runs on macOS 14 or later.
-To build, use Xcode 16 or later (or another Swift 6 toolchain with a macOS
-SDK). Xcode 16 itself requires macOS 14.5 or later.
+Download [Squished.zip](https://github.com/andrewk17/squished/releases/latest/download/Squished.zip),
+unzip it and move Squished.app to your Applications folder. It runs on macOS 14
+or later, on Apple silicon and Intel Macs, and is signed and notarized by Apple.
+Older versions are on the [releases page](https://github.com/andrewk17/squished/releases).
+
+### Build from source
+
+Use Xcode 16 or later (or another Swift 6 toolchain with a macOS SDK). Xcode 16
+itself requires macOS 14.5 or later.
 
 ```sh
 git clone https://github.com/andrewk17/squished.git

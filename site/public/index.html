@@ -52,7 +52,7 @@
       "license": "https://opensource.org/license/mit",
       "image": "https://squished.andrewkim.me/img/og.png",
       "screenshot": "https://squished.andrewkim.me/img/hero-light.webp",
-      "downloadUrl": "https://github.com/andrewk17/squished",
+      "downloadUrl": "https://github.com/andrewk17/squished/releases/latest/download/Squished.zip",
       "sameAs": [
         "https://github.com/andrewk17/squished"
       ],
@@ -135,7 +135,7 @@
           "name": "Which versions of macOS does Squished run on?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "macOS 14 or later. For now you build it from source, which needs Xcode 16 or another Swift 6 toolchain."
+            "text": "macOS 14 or later, on Apple silicon and Intel Macs. The download is signed and notarized by Apple."
           }
         }
       ]
@@ -280,7 +280,8 @@
   <p>Remote machines need Linux with <code>/proc</code>, <code>sh</code>, <code>awk</code> and standard utilities such as <code>df</code>. The sampler is tested on Ubuntu with gawk, mawk and BusyBox awk, including data from a Synology NAS.</p>
 
   <h2>Install</h2>
-  <p>Squished is built from source for now. The app runs on macOS 14 or later; building needs Xcode 16 or another Swift 6 toolchain.</p>
+  <p><a href="https://github.com/andrewk17/squished/releases/latest/download/Squished.zip">Download Squished.zip</a>, unzip it and move Squished.app to your Applications folder. It runs on macOS 14 or later, on Apple silicon and Intel Macs, and is signed and notarized by Apple.</p>
+  <p>To build from source instead, you need Xcode 16 or another Swift 6 toolchain:</p>
 <pre><code>git clone https://github.com/andrewk17/squished.git
 cd squished
 Scripts/package-app.sh --install
@@ -317,7 +318,7 @@ open /Applications/Squished.app</code></pre>
   <p>No. The app has no analytics and makes no network requests of its own. The only connections are the SSH sessions to the machines you add.</p>
 
   <h3>Which versions of macOS does Squished run on?</h3>
-  <p>macOS 14 or later. For now you build it from source, which needs Xcode 16 or another Swift 6 toolchain.</p>
+  <p>macOS 14 or later, on Apple silicon and Intel Macs. The download is signed and notarized by Apple.</p>
 </main>
 
 <footer>
