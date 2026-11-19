@@ -2,6 +2,6 @@
 <defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4aa3ff"/><stop offset="1" stop-color="#0a6cff"/></linearGradient><filter id="shadow" x="-10%" y="-10%" width="120%" height="125%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#000" flood-opacity=".28"/></filter></defs>
 <rect x="100" y="100" width="824" height="824" rx="186" fill="url(#bg)" filter="url(#shadow)"/>
 <rect x="102" y="102" width="820" height="820" rx="184" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="4"/>
-<path d="M248 312 L408 512 L248 712" fill="none" stroke="#fff" stroke-width="108" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M776 312 L616 512 L776 712" fill="none" stroke="#fff" stroke-width="108" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M212 340 L340 512 L212 684 M812 340 L684 512 L812 684" fill="none" stroke="#fff" stroke-width="100" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="468" y="248" width="88" height="528" rx="44" fill="#fff"/>
 </svg>
