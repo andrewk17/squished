@@ -2,6 +2,8 @@
 
 **Super compact stats for your fleet.** Your Mac and your Linux servers, in the space of three menu bar icons.
 
+[squished.andrewkim.me](https://squished.andrewkim.me/)
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/hero-dark.png">
   <img alt="Squished in the menu bar, showing three machines, with its panel open below" src="docs/images/hero-light.png" width="520">
